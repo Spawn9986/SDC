@@ -1,0 +1,31 @@
+{
+  "name": "pern-todo-demo",
+  "version": "1.0.0",
+  "description": "### **Purpose** - Demonstrate a simple TODO full-stack application with a Postgres database, Node Express API backend, and React frontend for containerization in Docker #   ### **Description** - This is a simple PERN stack application, a Todo List which performs CRUD operations on a single resource. It consists of a React front-end, back-end API using Node and Express, and persisting data in a Postresql database.  * The front end in React is based off https://github.com/mdn/todo-react, which is just a React front-end that uses only mock data. Fetch API calls were added to connect it to a back-end    * The back end is an Express server in Node.js which uses the Sequelize ORM to connect to the postgres database.   * Note - Migration and Seed data files are supplied for the sequelize-cli, but are not yet configured to work in Docker",
+  "main": "index.js",
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhillipWitkin/PERN-todo-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PhillipWitkin/PERN-todo-demo/issues"
+  },
+  "homepage": "https://github.com/PhillipWitkin/PERN-todo-demo#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "k6": "^0.0.0",
+    "node": "^20.1.0",
+    "nodemon": "^2.0.22",
+    "pg": "^8.11.0"
+  }
+}

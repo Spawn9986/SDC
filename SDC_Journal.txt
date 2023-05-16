@@ -1,0 +1,112 @@
+Looking into the database of current Blue Ocean (Instructor Hub-19 Project). They used seed and migration files as weel as a yaml and .env file.
+The URL in the yaml states: DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database/${POSTGRES_DB}
+which translates to --> DATABASE_URL: postgres://postgres:docker@database/blueocean
+
+CLIENT_PORT=3000
+API_PORT=8000
+
+Researching how to do a load test on the database (currently using PostgresSQL). 
+What are my options: K6, Jmeter, Gatling, Load runner, etc.
+
+Below taken from Reference: https://earthly.dev/blog/load-testing-using-k6/
+
+With k6, you can easily scale out the expected users’ requests you need and be able to visualize the status of your load test using several reporter tools like InfluxDB, Prometheus, or Grafana.
+
+k6 helps you to perform different types of load testing such as spike testing, smoke testing, or soak testing by customizing the test scenarios. 
+
+Besides the default report showing in the console after the test execution is done, you can export the test metrics to other services like InfluxDB, or Apache Kafka so that you can view the report visually in real-time during the test execution.
+
+K6 --> Build vs Creating scripts vs using Javascript inside VS code
+
+1 - do load test using build in K6
+2 - scale the users and stress the DB
+3 - Analyze the results (performance insights algorhythms etc)
+4 - Gather suggestions from K6
+5 - Use a different DB (MongoDB etc) and repeat
+
+//Steps 
+* npm install k6;
+* created a k6 directory and a loadTest.js file in it
+* wrote the following JS code in the loadTest.js:
+
+import http from "k6/http";
+import { check } from "k6";
+
+export default function () {
+  let res = http.get("postgres://postgres:docker@database/blueocean");
+  check(res, {
+    "is status 200": (r) => r.status === 200,
+  });
+}
+
+* Went to the terminal and inside the k6 directory tried to run --> 'k6 run sdcTestScript.js'
+
+Error: 'bash: k6: command not found'
+
+I believe the error is coming from the --> import http from "k6/http"; Will conduct further research on this
+
+Issues --> will return to later; for now moving on to implementing faker
+
+Found a repo that integrates docker and does K6 tests with InfluxDB and Grafana:
+
+https://medium.com/swlh/beautiful-load-testing-with-k6-and-docker-compose-4454edb3a2e3
+
+--> Got it to work in a seperate Repo but could not integrate it into my current project
+
+Below taken from Reference: https://medium.com/geoblinktech/postgres-and-integration-testing-in-node-js-apps-2e1b52af7ffc
+
+Also reseraching the difference between unit, integration, and end to end testing to see which one to use
+
+For example, in the core application’s backend, where the interaction with the databases happens, we rely heavily on integration tests. In an API server, this type of testing means you make actual requests to your endpoints and query the database to make sure that everything works as expected.
+
+Approach to integration testing:
+
+1 - Make sure that there is exactly one connection from the application to the database
+2 - Create a temporary table with the same name as the table that we want to test
+3 - Insert fake data (optionally) and test your cases
+
+After creating the temporary table, all queries will be querying that table instead of the original.Postgres uses a search path which is basically a list of schemas in a specific order that Postgres looks up to determine which table to query.
+
+A typical flow of testing:
+
+1 - Load the application and mock interfaces
+2 - Create temporary tables
+3 - Load fake data into the temporary tables (optional)
+4 - Call endpoint
+5 - Assert
+6 - Drop temporary tables and clean up
+
+Initializing the app:
+Postgres, Docker and docker-compose to spin up our database
+Node.js and express to set up a server and our endpoint
+pg-pool to connect to Postgres
+mocha as the test runner, chai as the assertion library, and supertest to make HTTP requests and assertions on them
+
+Need to go back and refresh myself on Databases (relational and non-relational)
+
+Tried to get a more simplified project to work with so instructor provided a PERN Demo for me.
+
+I inserted a Docker and .yaml file to be able to run through docker
+
+I then used a docker VS Code extension to create a table called todos using 
+
+todo_db=# CREATE TABLE todos (todo_id serial PRIMARY KEY,name VARCHAR(50),completed BOOLEAN NOT NULL DEFAULT false);
+
+then installed faker.js library to generate fake data
+
+created the seed data for faker inside of the server.js file
+
+npm installed dependencies (pg, nodemon, node, cors, k6)
+
+updated the scripts inside the package.json file
+
+Since the file we working in was written in ES5 instead of using Babel I just rewrote in ES5 using require instead of import
+
+Goals:
+1.	be able to generate some faker data
+2.	Take a baseline reading of some queries (be able to read some tables???)
+3.	Add more faked data, 10-100x the number of entries
+4.	Repeat a few rounds until you have like 100k+ entries
+5.	Put indexes on your FK's
+6.	Look at the difference
+

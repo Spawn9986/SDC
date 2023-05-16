@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  todo-postgres-db:
+    container_name: todo-postgres-db
+    image: postgres:latest
+    restart: always
+    environment:
+      DATABASE_HOST: 127.0.0.1
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: todo_db
+    ports:
+      - "6432:5432"
+
+volumes:
+  pgdatasource:
